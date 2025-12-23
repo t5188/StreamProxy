@@ -139,4 +139,4 @@ ui_print "- 还原配置文件"
 pm install -r /data/adb/StreamProxy/scripts/toast.apk && rm -f /data/adb/StreamProxy/scripts/toast.apk || ui_print "- 请手动安装toast.apk"
 find "${source_folder}" -type f -name ".gitkeep" -exec rm -f {} +
 ui_print "- enjoy!"
-# customize.sh StreamProxy Last edited: 2025.12.15
+# Last edited: 2025.12.23

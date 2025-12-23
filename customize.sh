@@ -4,8 +4,8 @@ SKIPUNZIP=1
 ASH_STANDALONE=1
 unzip_path="/data/adb"
 
-source_folder="/data/adb/xlink"
-destination_folder="/data/adb/xlink$(date +%Y%m%d_%H%M%S)"
+source_folder="/data/adb/StreamProxy"
+destination_folder="/data/adb/StreamProxy$(date +%Y%m%d_%H%M%S)"
 
 unzip -j -o "$ZIPFILE" 'CHANGELOG.md' -d $MODPATH >&2
 cat $MODPATH/CHANGELOG.md
@@ -23,14 +23,14 @@ else
 fi
 
 # Set up service directory and clean old installations
-if [ -d "/data/adb/modules/AXlink" ]; then
-  rm -rf "/data/adb/modules/AXlink"
+if [ -d "/data/adb/modules/AStreamProxy" ]; then
+  rm -rf "/data/adb/modules/AStreamProxy"
   ui_print "- 旧模块已删除"
 fi
 
 ui_print "- 正在释放文件"
-unzip -o "$ZIPFILE" 'xlink/*' -d $unzip_path >&2
-unzip -j -o "$ZIPFILE" 'xlink.sh' -d /data/adb/service.d >&2
+unzip -o "$ZIPFILE" 'StreamProxy/*' -d $unzip_path >&2
+unzip -j -o "$ZIPFILE" 'StreamProxy.sh' -d /data/adb/service.d >&2
 unzip -j -o "$ZIPFILE" 'uninstall.sh' -d $MODPATH >&2
 unzip -j -o "$ZIPFILE" "action.sh" -d $MODPATH >&2
 unzip -j -o "$ZIPFILE" "module.prop" -d $MODPATH >&2
@@ -45,16 +45,16 @@ else
   sed -i "s/name=.*/name=Xlink for Magisk/g" $MODPATH/module.prop
 fi
 
-largest_folder=$(find /data/adb -maxdepth 1 -type d -name 'xlink[0-9]*' | sed 's/.*xlink//' | sed 's/_//g' | sort -nr | head -n 1)
+largest_folder=$(find /data/adb -maxdepth 1 -type d -name 'StreamProxy[0-9]*' | sed 's/.*StreamProxy//' | sed 's/_//g' | sort -nr | head -n 1)
 
 if [ -n "$largest_folder" ]; then
-  for folder in /data/adb/xlink*; do
-    clean_name=$(echo "$folder" | sed 's/.*xlink//' | sed 's/_//g')
+  for folder in /data/adb/StreamProxy*; do
+    clean_name=$(echo "$folder" | sed 's/.*StreamProxy//' | sed 's/_//g')
     if [ "$clean_name" = "$largest_folder" ]; then
       ui_print "- Found folder: $folder"
       if [ -d "$folder/confx" ]; then
-        cp -rf "$folder/confx/"* /data/adb/xlink/confx/
-        ui_print "- Copied contents of $folder/confx to /data/adb/xlink/confx/"
+        cp -rf "$folder/confx/"* /data/adb/StreamProxy/confx/
+        ui_print "- Copied contents of $folder/confx to /data/adb/StreamProxy/confx/"
         ui_print "- 成功还原配置文件"
       fi
       break
@@ -127,16 +127,16 @@ download_and_extract
 
 ui_print "- 正在设置权限"
 set_perm_recursive $MODPATH 0 0 0755 0755
-set_perm_recursive /data/adb/xlink/ 0 3005 0755 0755
-set_perm_recursive /data/adb/xlink/scripts/ 0 3005 0755 0755
-set_perm /data/adb/service.d/xlink.sh 0 0 0755
+set_perm_recursive /data/adb/StreamProxy/ 0 3005 0755 0755
+set_perm_recursive /data/adb/StreamProxy/scripts/ 0 3005 0755 0755
+set_perm /data/adb/service.d/StreamProxy.sh 0 0 0755
 set_perm $MODPATH/uninstall.sh 0 0 0755
-set_perm /data/adb/xlink/scripts/ 0 0 0755
+set_perm /data/adb/StreamProxy/scripts/ 0 0 0755
 set_perm $MODPATH/action.sh 0 0 0755
 ui_print "- 完成权限设置"
 ui_print "- 还原配置文件"
 
-pm install -r /data/adb/xlink/scripts/toast.apk && rm -f /data/adb/xlink/scripts/toast.apk || ui_print "- 请手动安装toast.apk"
+pm install -r /data/adb/StreamProxy/scripts/toast.apk && rm -f /data/adb/StreamProxy/scripts/toast.apk || ui_print "- 请手动安装toast.apk"
 find "${source_folder}" -type f -name ".gitkeep" -exec rm -f {} +
 ui_print "- enjoy!"
-# customize.sh xlink Last edited: 2025.12.15
+# customize.sh StreamProxy Last edited: 2025.12.15

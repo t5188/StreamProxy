@@ -6,12 +6,12 @@ monitor_file=$3
 if [[ "${monitor_file}" == "disable" ]]; then
   case "${events}" in
   "d")
-    $(pwd)/xlink.service enable >/dev/null 2>&1
+    $(pwd)/StreamProxy.service enable >/dev/null 2>&1
     ;;
   "n")
-    $(pwd)/xlink.service disable >/dev/null 2>&1
+    $(pwd)/StreamProxy.service disable >/dev/null 2>&1
     ;;
   esac
 fi
 
-# xlink.inotify Last edited: 2025.12.20
+# Last edited: 2025.12.23

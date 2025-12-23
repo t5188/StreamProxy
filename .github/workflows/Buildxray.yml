@@ -35,7 +35,7 @@ jobs:
           echo '{
             "version": "'"${version}"'",
             "versionCode": "'"${versionCode}"'",
-            "zipUrl": "https://github.com/t5188/${{ env.REPO_NAME }}/releases/download/'"${version}"'/xlink-'${version}'.zip",
+            "zipUrl": "https://github.com/t5188/${{ env.REPO_NAME }}/releases/download/'"${version}"'/StreamProxy-'${version}'.zip",
             "changelog": "https://github.com/t5188/${{ env.REPO_NAME }}/raw/main/CHANGELOG.md"
           }' > update.json
 
@@ -74,8 +74,8 @@ jobs:
       - name: Extract version from filename
         id: extract_version
         run: |
-          zip_file=$(ls xlink-v*.zip)
-          version=$(echo "$zip_file" | sed -E 's/xlink-v(.*).zip/v\1/')
+          zip_file=$(ls StreamProxy-v*.zip)
+          version=$(echo "$zip_file" | sed -E 's/StreamProxy-v(.*).zip/v\1/')
           echo "VERSION=${version}" >> $GITHUB_ENV
 
       # Step 10: Read release notes from CHANGELOG.md
@@ -93,7 +93,7 @@ jobs:
         if: ${{ success() }}
         with:
           tag_name: ${{ env.VERSION }}
-          files: xlink-v*.zip
+          files: StreamProxy-v*.zip
           body: ${{ env.RELEASE_NOTES }}
           prerelease: true
           draft: false

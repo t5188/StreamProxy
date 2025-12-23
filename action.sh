@@ -2,13 +2,13 @@
 # Environment variable settings
 export PATH="/data/adb/ap/bin:/data/adb/ksu/bin:/data/adb/magisk:$PATH"
 
-module_dir="/data/adb/modules/AXlink"
-scripts_dir="/data/adb/xlink/scripts"
+module_dir="/data/adb/modules/AStreamProxy"
+scripts_dir="/data/adb/StreamProxy/scripts"
 
 restart_proxy_service() {
   if [ ! -f "${module_dir}/disable" ]; then
     echo "🔁Restart Proxy"
-    ${scripts_dir}/xlink.service enable >/dev/null 2>&1
+    ${scripts_dir}/StreamProxy.service enable >/dev/null 2>&1
   else
     echo "🥴 Module Disabled"
     sleep 1
@@ -18,4 +18,4 @@ restart_proxy_service() {
 
 restart_proxy_service
 
-# action.sh xlink Last edited: 2025.12.20
+# Last edited: 2025.12.23

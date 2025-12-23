@@ -7,7 +7,7 @@ scripts_dir="/data/adb/StreamProxy/scripts"
 
 restart_proxy_service() {
   if [ ! -f "${module_dir}/disable" ]; then
-    echo "🔁Restart Proxy"
+    echo "🔁Restart StreamProxy"
     ${scripts_dir}/StreamProxy.service enable >/dev/null 2>&1
   else
     echo "🥴 Module Disabled"

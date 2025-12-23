@@ -1,6 +1,6 @@
 #!/system/bin/sh
 cd ${0%/*} # current working directory
-source $(pwd)/settings.ini
+source "$(pwd)/settings.ini"
 
 disable_ipv6() {
   sysctl -w net.ipv4.ip_forward=1

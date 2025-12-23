@@ -1,4 +1,4 @@
-name: Build xray module
+name: Build StreamProxy Module
 
 on:
   workflow_dispatch:

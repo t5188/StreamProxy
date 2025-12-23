@@ -35,7 +35,7 @@ add_tproxy_rules() {
   ${2} -t mangle -N ${3}_BLOCK_LOOPBACK
   ${2} -t mangle -F ${3}_BLOCK_LOOPBACK
 
-  ${2} -t mangle -A ${3}_LOCAL -m owner --uid-owner ${core_user} --gid-owner ${core_group} -j RETURN
+  ${2} -t mangle -A ${3}_LOCAL -m owner --uid-owner ${core_uid} --gid-owner ${core_gid} -j RETURN
   
   for proto in udp tcp; do
     ${2} -t mangle -A ${3}_LOCAL -p ${proto} --dport 53 -j MARK --set-xmark ${fwmark}
@@ -120,8 +120,8 @@ run_del_tproxy_rules() {
 }
 
 quic_rules() {
-  ${1} ${2} OUTPUT -p udp --dport 443 -m owner ! --uid-owner ${core_user} ! --gid-owner ${core_group} -j REJECT
-  ${1} ${2} OUTPUT -p udp --dport 80 -m owner ! --uid-owner ${core_user} ! --gid-owner ${core_group} -j REJECT
+  ${1} ${2} OUTPUT -p udp --dport 443 -m owner ! --uid-owner ${core_uid} ! --gid-owner ${core_gid} -j REJECT
+  ${1} ${2} OUTPUT -p udp --dport 80 -m owner ! --uid-owner ${core_uid} ! --gid-owner ${core_gid} -j REJECT
 }
 
 run_add_quic_rules() {
@@ -147,7 +147,7 @@ start_tproxy() {
   { [[ "${ipv6}" == "true" ]] && ipv6_enable || disable_ipv6; } >/dev/null 2>&1
   { run_add_tproxy_rules; run_add_quic_rules; } >/dev/null 2>&1
   ulimit -SHn 1000000
-  nohup busybox setuidgid ${core_user}:${core_group} ${core_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &
+  nohup busybox setuidgid ${core_uid}:${core_gid} ${core_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &
   pid_xray=$!
   ech-tunnel
   cron_task

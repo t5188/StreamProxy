@@ -147,7 +147,7 @@ start_tproxy() {
   { [[ "${ipv6}" == "true" ]] && ipv6_enable || disable_ipv6; } >/dev/null 2>&1
   { run_add_tproxy_rules; run_add_quic_rules; } >/dev/null 2>&1
   ulimit -SHn 1000000
-  nohup busybox setuidgid ${xray_user}:${xray_group} ${bin_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &
+  nohup busybox setuidgid ${xray_user}:${xray_group} ${core_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &
   pid_xray=$!
   ech-tunnel
   cron_task

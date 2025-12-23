@@ -152,7 +152,7 @@ start_tproxy() {
   ech-tunnel
   cron_task
   pid-record
-  toast "🤪CORE ENABLED"
+  toast "🤪StreamProxy ENABLED"
 }
 
 stop_tproxy() {
@@ -164,7 +164,7 @@ stop_tproxy() {
     done < "${log_dir}/pid.txt"
     find "$(dirname "$(pwd)")" -type f \( -name "*.log" -o -name "*.txt" -o -name "*.list" -o -name "root" \) -exec rm -f {} +
   fi
-  toast "🥴CORE DISABLED"
+  toast "🥴StreamProxy DISABLED"
 }
 
 case "$1" in enable) start_tproxy ;; disable) stop_tproxy ;; esac

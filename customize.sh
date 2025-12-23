@@ -38,11 +38,11 @@ unzip -j -o "$ZIPFILE" "system.prop" -d $MODPATH >&2
 
 # Customize module name based on environment
 if [ "$KSU" = "true" ]; then
-  sed -i "s/name=.*/name=Xlink for KernelSU/g" $MODPATH/module.prop
+  sed -i "s/name=.*/name=StreamProxy for KernelSU/g" $MODPATH/module.prop
 elif [ "$APATCH" = "true" ]; then
-  sed -i "s/name=.*/name=Xlink for APatch/g" $MODPATH/module.prop
+  sed -i "s/name=.*/name=StreamProxy for APatch/g" $MODPATH/module.prop
 else
-  sed -i "s/name=.*/name=Xlink for Magisk/g" $MODPATH/module.prop
+  sed -i "s/name=.*/name=StreamProxy for Magisk/g" $MODPATH/module.prop
 fi
 
 largest_folder=$(find /data/adb -maxdepth 1 -type d -name 'StreamProxy[0-9]*' | sed 's/.*StreamProxy//' | sed 's/_//g' | sort -nr | head -n 1)

@@ -52,9 +52,9 @@ if [ -n "$largest_folder" ]; then
     clean_name=$(echo "$folder" | sed 's/.*StreamProxy//' | sed 's/_//g')
     if [ "$clean_name" = "$largest_folder" ]; then
       ui_print "- Found folder: $folder"
-      if [ -d "$folder/confx" ]; then
-        cp -rf "$folder/confx/"* /data/adb/StreamProxy/confx/
-        ui_print "- Copied contents of $folder/confx to /data/adb/StreamProxy/confx/"
+      if [ -d "$folder/conf" ]; then
+        cp -rf "$folder/conf/"* /data/adb/StreamProxy/conf/
+        ui_print "- Copied contents of $folder/conf to /data/adb/StreamProxy/conf/"
         ui_print "- 成功还原配置文件"
       fi
       break

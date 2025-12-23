@@ -2,7 +2,7 @@
 cd ${0%/*} # current working directory
 source "$(pwd)/settings.ini"
 events=$1
-[[ ${netChange} = "disable" ]] && exit 0
+[[ ${NETCHANGE} = "disable" ]] && exit 0
 
 block_loopback() {
 # Define local variables
@@ -32,7 +32,7 @@ fi
 
 run_block_loopback() {
   block_loopback "${IPV}" "-I" "${chain_name}4" "-4"
-  [[ "${ipv6}" == "false" ]] && return 1
+  [[ "${IPV6}" == "false" ]] && return 1
   block_loopback "${IP6V}" "-I" "${chain_name}6" "-6"
 }
 
@@ -42,7 +42,7 @@ rm_block_loopback() {
     block_loopback "${IPV}" "-D" "${chain_name}4" "-4"
   fi
   # IPv6
-  [[ "${ipv6}" == "false" ]] && return 1
+  [[ "${IPV6}" == "false" ]] && return 1
   if ip6tables -t mangle -S "${chain_name}6_BLOCK_LOOPBACK" >/dev/null 2>&1; then
     block_loopback "${IP6V}" "-D" "${chain_name}6" "-6"
   fi

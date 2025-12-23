@@ -61,7 +61,7 @@ add_tproxy_rules() {
     done
   fi
 
-  case "${proxy_mode}" in
+  case "${PROXY_MODE}" in
   "blacklist")
     if [[ ${#uids[@]} -gt 0 ]]; then
       for appid in ${uids[*]}; do
@@ -109,13 +109,13 @@ del_tproxy_rules() {
 
 run_add_tproxy_rules() {
   add_tproxy_rules "ip -4" "${IPV}" "${chain_name}4" "${intranet4[*]}"
-  [[ "${ipv6}" == "false" ]] && return 1
+  [[ "${IPV6}" == "false" ]] && return 1
   add_tproxy_rules "ip -6" "${IP6V}" "${chain_name}6" "${intranet6[*]}"
 }
 
 run_del_tproxy_rules() {
   del_tproxy_rules "ip -4" "${IPV}" "${chain_name}4"
-  [[ "${ipv6}" == "false" ]] && return 1
+  [[ "${IPV6}" == "false" ]] && return 1
   del_tproxy_rules "ip -6" "${IP6V}" "${chain_name}6"
 }
 
@@ -125,17 +125,17 @@ quic_rules() {
 }
 
 run_add_quic_rules() {
-  if [ "${quic}" = "disable" ]; then
+  if [ "${QUIC}" = "disable" ]; then
     quic_rules "${IPV}" "-I"
-    [[ "${ipv6}" == "false" ]] && return 1
+    [[ "${IPV6}" == "false" ]] && return 1
     quic_rules "${IP6V}" "-I"
   fi
 }
 
 run_del_disable_quic() {
-  if [ "${quic}" = "disable" ]; then
+  if [ "${QUIC}" = "disable" ]; then
     quic_rules "${IPV}" "-D"
-    [[ "${ipv6}" == "false" ]] && return 1
+    [[ "${IPV6}" == "false" ]] && return 1
     quic_rules "${IP6V}" "-D"
   fi
 }
@@ -144,7 +144,7 @@ start_tproxy() {
   [ -f "${log_dir}/pid.txt" ] && stop_tproxy
   check_files_complete
   { init_base; init_outbound; init_dns; init_route; init_uids; }
-  { [[ "${ipv6}" == "true" ]] && ipv6_enable || disable_ipv6; } >/dev/null 2>&1
+  { [[ "${IPV6}" == "true" ]] && ipv6_enable || disable_ipv6; } >/dev/null 2>&1
   { run_add_tproxy_rules; run_add_quic_rules; } >/dev/null 2>&1
   ulimit -SHn 1000000
   nohup busybox setuidgid ${core_uid}:${core_gid} ${core_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &

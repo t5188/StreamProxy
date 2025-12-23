@@ -7,16 +7,16 @@ unzip_path="/data/adb"
 source_folder="/data/adb/StreamProxy"
 destination_folder="/data/adb/StreamProxy$(date +%Y%m%d_%H%M%S)"
 
-unzip -j -o "$ZIPFILE" 'CHANGELOG.md' -d $MODPATH >&2
-cat $MODPATH/CHANGELOG.md
-rm -f "$MODPATH/CHANGELOG.md"
+unzip -j -o "${ZIPFILE}" 'CHANGELOG.md' -d "${MODPATH}" >&2
+cat "${MODPATH}/CHANGELOG.md"
+rm -f "${MODPATH}/CHANGELOG.md"
 
-if [ -d "$source_folder" ]; then
+if [ -d "${source_folder}" ]; then
   # If the source folder exists, execute the move operation
-  mv "$source_folder" "$destination_folder"
+  mv "${source_folder}" "${destination_folder}"
   ui_print "- 正在备份已有文件"
   # Delete old folders and update them
-  rm -rf "$source_folder"
+  rm -rf "${source_folder}"
 else
   # If the source folder does not exist, output initial installation information
   ui_print "- 正在初始安装"
@@ -29,32 +29,32 @@ if [ -d "/data/adb/modules/AStreamProxy" ]; then
 fi
 
 ui_print "- 正在释放文件"
-unzip -o "$ZIPFILE" 'StreamProxy/*' -d $unzip_path >&2
-unzip -j -o "$ZIPFILE" 'StreamProxy.sh' -d /data/adb/service.d >&2
-unzip -j -o "$ZIPFILE" 'uninstall.sh' -d $MODPATH >&2
-unzip -j -o "$ZIPFILE" "action.sh" -d $MODPATH >&2
-unzip -j -o "$ZIPFILE" "module.prop" -d $MODPATH >&2
-unzip -j -o "$ZIPFILE" "system.prop" -d $MODPATH >&2
+unzip -o "${ZIPFILE}" 'StreamProxy/*' -d "${unzip_path}" >&2
+unzip -j -o "${ZIPFILE}" 'StreamProxy.sh' -d /data/adb/service.d >&2
+unzip -j -o "${ZIPFILE}" 'uninstall.sh' -d "${MODPATH}" >&2
+unzip -j -o "${ZIPFILE}" "action.sh" -d "${MODPATH}" >&2
+unzip -j -o "${ZIPFILE}" "module.prop" -d "${MODPATH}" >&2
+unzip -j -o "${ZIPFILE}" "system.prop" -d "${MODPATH}" >&2
 
 # Customize module name based on environment
-if [ "$KSU" = "true" ]; then
-  sed -i "s/name=.*/name=StreamProxy for KernelSU/g" $MODPATH/module.prop
-elif [ "$APATCH" = "true" ]; then
-  sed -i "s/name=.*/name=StreamProxy for APatch/g" $MODPATH/module.prop
+if [ "${KSU}" = "true" ]; then
+  sed -i "s/name=.*/name=StreamProxy for KernelSU/g" "${MODPATH}/module.prop"
+elif [ "${APATCH}" = "true" ]; then
+  sed -i "s/name=.*/name=StreamProxy for APatch/g" "${MODPATH}/module.prop"
 else
-  sed -i "s/name=.*/name=StreamProxy for Magisk/g" $MODPATH/module.prop
+  sed -i "s/name=.*/name=StreamProxy for Magisk/g" "${MODPATH}/module.prop"
 fi
 
 largest_folder=$(find /data/adb -maxdepth 1 -type d -name 'StreamProxy[0-9]*' | sed 's/.*StreamProxy//' | sed 's/_//g' | sort -nr | head -n 1)
 
-if [ -n "$largest_folder" ]; then
+if [ -n "${largest_folder}" ]; then
   for folder in /data/adb/StreamProxy*; do
-    clean_name=$(echo "$folder" | sed 's/.*StreamProxy//' | sed 's/_//g')
-    if [ "$clean_name" = "$largest_folder" ]; then
-      ui_print "- Found folder: $folder"
-      if [ -d "$folder/conf" ]; then
-        cp -rf "$folder/conf/"* /data/adb/StreamProxy/conf/
-        ui_print "- Copied contents of $folder/conf to /data/adb/StreamProxy/conf/"
+    clean_name=$(echo "${folder}" | sed 's/.*StreamProxy//' | sed 's/_//g')
+    if [ "${clean_name}" = "${largest_folder}" ]; then
+      ui_print "- Found folder: ${folder}"
+      if [ -d "${folder}/conf" ]; then
+        cp -rf "${folder}/conf/"* /data/adb/StreamProxy/conf/
+        ui_print "- Copied contents of ${folder}/conf to /data/adb/StreamProxy/conf/"
         ui_print "- 成功还原配置文件"
       fi
       break
@@ -74,27 +74,27 @@ download_and_extract() {
 
   DEST="$source_folder/binary"
 
-  do_download() {
-    ui_print "— 开始下载并解压 Xray 内核..."
-    if ! curl -L -o "$TMP" "$URL"; then
-      ui_print "⚠️ curl 下载失败，尝试使用 wget..."
-      if ! wget -O "$TMP" "$URL"; then
-        ui_print "❌ 下载 Xray 内核失败，跳过此步骤"
-        return
-      fi
-    fi
-    mkdir -p "$DEST"
-    if ! unzip -o "$TMP" -d "$DEST"; then
-      ui_print "❌ 解压 Xray 内核失败，跳过此步骤"
+do_download() {
+  ui_print "— 开始下载并解压 Xray 内核..."
+  if ! curl -L -o "${TMP}" "${URL}"; then
+    ui_print "⚠️ curl 下载失败，尝试使用 wget..."
+    if ! wget -O "${TMP}" "${URL}"; then
+      ui_print "❌ 下载 Xray 内核失败，跳过此步骤"
       return
     fi
-    rm -f "$TMP" "$DEST/LICENSE" "$DEST/README.md"
-    ui_print "— Xray 内核下载完成 ✅"
-  }
+  fi
+  mkdir -p "${DEST}"
+  if ! unzip -o "${TMP}" -d "${DEST}"; then
+    ui_print "❌ 解压 Xray 内核失败，跳过此步骤"
+    return
+  fi
+  rm -f "${TMP}" "${DEST}/LICENSE" "${DEST}/README.md"
+  ui_print "— Xray 内核下载完成 ✅"
+}
 
-  skip_download() {
-    ui_print "— 跳过下载 Xray 内核 ❌"
-  }
+skip_download() {
+  ui_print "— 跳过下载 Xray 内核 ❌"
+}
 
   # 音量键选择逻辑
   ui_print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -126,13 +126,13 @@ download_and_extract() {
 download_and_extract
 
 ui_print "- 正在设置权限"
-set_perm_recursive $MODPATH 0 0 0755 0755
+set_perm_recursive "${MODPATH}" 0 0 0755 0755
 set_perm_recursive /data/adb/StreamProxy/ 0 3005 0755 0755
 set_perm_recursive /data/adb/StreamProxy/scripts/ 0 3005 0755 0755
 set_perm /data/adb/service.d/StreamProxy.sh 0 0 0755
-set_perm $MODPATH/uninstall.sh 0 0 0755
+set_perm "${MODPATH}/uninstall.sh" 0 0 0755
 set_perm /data/adb/StreamProxy/scripts/ 0 0 0755
-set_perm $MODPATH/action.sh 0 0 0755
+set_perm "${MODPATH}/action.sh" 0 0 0755
 ui_print "- 完成权限设置"
 ui_print "- 还原配置文件"
 

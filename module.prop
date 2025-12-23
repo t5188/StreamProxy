@@ -1,0 +1,7 @@
+id=AXlink
+name=Xlink
+version=v1.02
+versionCode=20251220
+author=Jerry
+description=A module designed for transparent proxying
+updateJson=https://github.com/t5188/xlink/raw/main/update.json

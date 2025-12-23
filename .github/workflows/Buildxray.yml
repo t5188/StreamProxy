@@ -1,0 +1,101 @@
+name: Build xray module
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - ".github"
+      - "README.md"
+    tags-ignore:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - uses: actions/checkout@v3
+
+      # Step 2: Set up GitHub token for authentication
+      - name: Set up GitHub token
+        run: echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      # Step 3: Get the repository name
+      - name: Get repository name
+        id: get_repo_name
+        run: echo "REPO_NAME=$(basename $(git rev-parse --show-toplevel))" >> $GITHUB_ENV
+
+      # Step 4: Update update.json file
+      - name: Update update.json
+        run: |
+          version=$(grep -oP 'version=\K[^ ]+' module.prop)
+          versionCode=$(grep -oP 'versionCode=\K[^ ]+' module.prop)
+
+          echo '{
+            "version": "'"${version}"'",
+            "versionCode": "'"${versionCode}"'",
+            "zipUrl": "https://github.com/t5188/${{ env.REPO_NAME }}/releases/download/'"${version}"'/xlink-'${version}'.zip",
+            "changelog": "https://github.com/t5188/${{ env.REPO_NAME }}/raw/main/CHANGELOG.md"
+          }' > update.json
+
+      # Step 5: Commit and push update.json
+      - name: Commit and push update.json
+        run: |
+          git config --local user.name "t5188"
+          git config --local user.email "acstudycn@gmail.com"
+          git add update.json
+          git commit -m "Update update.json for version $(grep -oP 'version=\K[^ ]+' module.prop)" || true
+          git push origin main
+
+       # Step 6: Update module.prop file
+      - name: Update module.prop
+        run: |
+          sed -i "s|^updateJson=.*|updateJson=https://github.com/t5188/${{ env.REPO_NAME }}/raw/main/update.json|g" module.prop
+
+      # Step 7: Commit and push module.prop
+      - name: Commit and push module.prop
+        run: |
+          git config --local user.name "t5188"
+          git config --local user.email "acstudycn@gmail.com"
+          git add module.prop
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update module.prop with repository name"
+            git push origin main
+          fi
+
+      # Step 8: Run the build.sh script
+      - name: Run build.sh
+        run: sh build.sh
+
+      # Step 9: Extract version from the filename of the zip file
+      - name: Extract version from filename
+        id: extract_version
+        run: |
+          zip_file=$(ls xlink-v*.zip)
+          version=$(echo "$zip_file" | sed -E 's/xlink-v(.*).zip/v\1/')
+          echo "VERSION=${version}" >> $GITHUB_ENV
+
+      # Step 10: Read release notes from CHANGELOG.md
+      - name: Read release notes from CHANGELOG.md
+        id: get_release_notes
+        run: |
+          RELEASE_NOTES=$(cat CHANGELOG.md)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Step 11: Upload the new release
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        if: ${{ success() }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          files: xlink-v*.zip
+          body: ${{ env.RELEASE_NOTES }}
+          prerelease: true
+          draft: false
+          generate_release_notes: false
+          

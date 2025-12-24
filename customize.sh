@@ -102,25 +102,25 @@ skip_download() {
   ui_print "— [ Vol UP(+): 是 ]"
   ui_print "— [ Vol DOWN(-): 否 ]"
 
-  START_TIME=$(date +%s)
-  while true ; do
-    NOW_TIME=$(date +%s)
-    timeout 1 getevent -lc 1 2>&1 | grep KEY_VOLUME > "$TMPDIR/events"
+START_TIME=$(date +%s)
+while true ; do
+  NOW_TIME=$(date +%s)
+  timeout 1 getevent -lc 1 2>&1 | grep KEY_VOLUME > "${TMPDIR}/events"
 
-    if [ $(( NOW_TIME - START_TIME )) -gt 9 ]; then
-      ui_print "— 10 秒无操作，默认跳过下载"
-      skip_download
-      break
-    elif grep -q KEY_VOLUMEUP "$TMPDIR/events"; then
-      do_download
-      break
-    elif grep -q KEY_VOLUMEDOWN "$TMPDIR/events"; then
-      skip_download
-      break
-    fi
-  done
+  if [ $(( NOW_TIME - START_TIME )) -gt 9 ]; then
+    ui_print "— 10 秒无操作，默认跳过下载"
+    skip_download
+    break
+  elif grep -q KEY_VOLUMEUP "${TMPDIR}/events"; then
+    do_download
+    break
+  elif grep -q KEY_VOLUMEDOWN "${TMPDIR}/events"; then
+    skip_download
+    break
+  fi
+done
 
-  timeout 1 getevent -cl >/dev/null
+timeout 1 getevent -cl >/dev/null
 }
 
 download_and_extract

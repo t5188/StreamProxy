@@ -149,7 +149,7 @@ start_tproxy() {
   ulimit -SHn 1000000
   nohup busybox setuidgid ${core_uid}:${core_gid} ${core_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &
   pid_xray=$!
-  ech-tunnel
+  runExternalKernel
   cron_task
   pid-record
   toast "🤪StreamProxy ENABLED"

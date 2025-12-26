@@ -1,6 +1,6 @@
 # Release Notes
-## v1.02
+## v1.03
 _Release Date: 2025-12-26_
 
-- Optimize the check_files_complete function
+- Add support for ech-tunnel, anytls-client, and juicity-client
 ---

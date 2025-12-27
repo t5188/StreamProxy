@@ -13,3 +13,4 @@ mode=$(stat -c %a "${scripts_dir}/start.sh")
   "${scripts_dir}/start.sh"
 ) &
 exit 0
+# Last edited: 2025.12.27

@@ -1,6 +1,6 @@
 # Release Notes
-## v1.03
-_Release Date: 2025-12-26_
+## v1.04
+_Release Date: 2025-12-27_
 
-- Add support for ech-tunnel, anytls-client, and juicity-client
+- Update StreamProxy.sh
 ---

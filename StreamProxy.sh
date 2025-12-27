@@ -1,6 +1,6 @@
 #!/system/bin/sh
 scripts_dir="/data/adb/StreamProxy/scripts"
-mode=$(stat -c %a "${scripts_dir}/start.sh" 2>/dev/null)
+mode=$(stat -c %a "${scripts_dir}/start.sh")
 
 (
   until [ "$(getprop sys.boot_completed)" = "1" ]; do sleep 3; done

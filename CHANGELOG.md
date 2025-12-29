@@ -1,6 +1,6 @@
 # Release Notes
-## v1.05
-_Release Date: 2025-12-29_
+## v1.06
+_Release Date: 2025-12-30_
 
 - Update settings.ini
 ---

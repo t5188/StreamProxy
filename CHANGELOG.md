@@ -1,6 +1,6 @@
 # Release Notes
-## v1.04
-_Release Date: 2025-12-27_
+## v1.05
+_Release Date: 2025-12-29_
 
-- Update StreamProxy.sh
+- Update settings.ini
 ---

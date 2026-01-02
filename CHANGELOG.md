@@ -1,6 +1,6 @@
 # Release Notes
-## v1.06
-_Release Date: 2025-12-30_
+## v1.07
+_Release Date: 2026-1-3_
 
-- Update settings.ini
+- Update proxy configuration
 ---

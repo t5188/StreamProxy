@@ -1,7 +1,7 @@
 id=AStreamProxy
 name=StreamProxy
-version=v1.06
-versionCode=20251230
+version=v1.07
+versionCode=20260103
 author=Jerry
 description=A module designed for transparent proxying
 updateJson=https://github.com/t5188/StreamProxy/raw/main/update.json

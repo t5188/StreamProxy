@@ -1,6 +1,6 @@
 id=AStreamProxy
 name=StreamProxy
-version=v1.07
+version=v1.08
 versionCode=20260103
 author=Jerry
 description=A module designed for transparent proxying

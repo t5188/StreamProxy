@@ -1,6 +1,6 @@
 # Release Notes
-## v1.10
-_Release Date: 2026-1-8_
+## v1.11
+_Release Date: 2026-1-9_
 
-- Update settings.ini
+- Clean up fw_INPUT and fw_OUTPUT at boot to ensure transparent proxy functionality.
 ---

@@ -12,5 +12,32 @@ mode=$(stat -c %a "${scripts_dir}/start.sh")
 
   "${scripts_dir}/start.sh"
 ) &
+
+fw_clean() {
+  echo "[*] delete iptables references"
+  iptables -D OUTPUT -j fw_OUTPUT 2>/dev/null
+  iptables -D INPUT  -j fw_INPUT  2>/dev/null
+  
+  echo "[*] delete ip6tables references"
+  ip6tables -D OUTPUT -j fw_OUTPUT 2>/dev/null
+  ip6tables -D INPUT  -j fw_INPUT  2>/dev/null
+  
+  echo "[*] flush custom chains"
+  iptables  -F fw_INPUT  2>/dev/null
+  iptables  -F fw_OUTPUT 2>/dev/null
+  ip6tables -F fw_INPUT  2>/dev/null
+  ip6tables -F fw_OUTPUT 2>/dev/null
+  
+  echo "[*] delete custom chains"
+  iptables  -X fw_INPUT  2>/dev/null
+  iptables  -X fw_OUTPUT 2>/dev/null
+  ip6tables -X fw_INPUT  2>/dev/null
+  ip6tables -X fw_OUTPUT 2>/dev/null
+  
+  echo "[✓] fw_INPUT / fw_OUTPUT cleaned"
+}
+
+fw_clean
+
 exit 0
-# Last edited: 2025.12.27
+# Last edited: 2026.1.9

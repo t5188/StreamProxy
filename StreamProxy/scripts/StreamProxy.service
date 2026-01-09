@@ -146,6 +146,7 @@ start_tproxy() {
   { init_base; init_outbound; init_dns; init_route; init_uids; }
   { [[ "${IPV6}" == "true" ]] && ipv6_enable || disable_ipv6; } >/dev/null 2>&1
   { run_add_tproxy_rules; run_add_quic_rules; } >/dev/null 2>&1
+  fw_clean >/dev/null 2>&1
   ulimit -SHn 1000000
   nohup busybox setuidgid ${core_uid}:${core_gid} ${core_xray} run -confdir ${conf_dir} >/dev/null 2>&1 &
   pid_xray=$!
@@ -169,4 +170,4 @@ stop_tproxy() {
 
 case "$1" in enable) start_tproxy ;; disable) stop_tproxy ;; esac
 
-# Last edited: 2025.12.23
+# Last edited: 2026.1.9
